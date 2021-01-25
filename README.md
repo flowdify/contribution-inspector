@@ -1,3 +1,5 @@
+![Contribution Inspector Banner](https://firebasestorage.googleapis.com/v0/b/thecodinginsight.appspot.com/o/CIBanner.png?alt=media&token=8a20b770-8f2a-46a0-9dcd-81f135d72f8e)
+
 # Contribution Inspector
 A GitHub Action to validate submitted issues & PRs.
 
