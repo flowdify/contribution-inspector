@@ -1,3 +1,8 @@
+/**
+ * Use this class to manage, everything related to labels - creation, updation.
+ * 
+ * NOTE: addLabels() function is present in the contribution class.
+ */
 class LabelsManager {
 	constructor(core, payload, octokit, owner, repo, labels) {
 		this._core = core;
@@ -12,6 +17,17 @@ class LabelsManager {
 		return this._labels;
 	}
 
+	/**
+	 * Fetches and returns all labels from a repo.
+	 * Also filters the labels to have only name, description and color properties.
+	 * 
+	 * @returns {Array} allLabels - a list of all labels in a repo
+	 * @returns {object} allLabels[i] - a label
+	 * 
+	 * @param {string} allLabels[i].name - label name
+	 * @param {string} allLabels[i].description - label description
+	 * @param {string} allLabels[i].color - label color
+	 */
 	async getAllFilteredLabels() {
 		try {
 			const response = await this._octokit.issues.listLabelsForRepo({
@@ -36,10 +52,18 @@ class LabelsManager {
 		}
 	}
 
+	/**
+	 * Creates labels if they are already not created.
+	 * Updates labels if they are chnaged.
+	 */
 	async createOrUpdateLabels() {
 		try {
 			const allCreatedLabels = await this.getAllFilteredLabels();
 
+			/**
+			 * For every label check if it exists or not. If not create it.
+			 * If it exists, check if it has the valid description and color properties.
+			 */
 			for (let i = 0; i < this.LABELS.length; i++) {
 				let isLabelAlreadyCreated = false;
 
@@ -73,6 +97,16 @@ class LabelsManager {
 		}
 	}
 
+	/**
+	 * Creates labels.
+	 * 
+	 * @param {Array} labels - list of labels to be created.
+	 * @param {object} labels[i] - label
+	 * 
+	 * @param {string} labels[i].name - label name
+	 * @param {string} labels[i].description - label description
+	 * @param {string} labels[i].color - label color
+	 */
 	async createLabels(labels) {
 		try {
 			await labels.forEach(async (label) => {
@@ -84,6 +118,15 @@ class LabelsManager {
 		}
 	}
 
+	/**
+	 * Creates a single label.
+	 * 
+	 * @param {object} label
+	 * 
+	 * @param {string} labels[i].name - label name
+	 * @param {string} labels[i].description - label description
+	 * @param {string} labels[i].color - label color
+	 */
 	async createLabel({ name, color, description }) {
 		try {
 			await this._octokit.issues.createLabel({
@@ -99,6 +142,16 @@ class LabelsManager {
 		}
 	}
 
+	/**
+	 * Updates labels.
+	 * 
+	 * @param {Array} labels - list of labels to be created.
+	 * @param {object} labels[i] - label
+	 * 
+	 * @param {string} labels[i].name - label name
+	 * @param {string} labels[i].description - label description
+	 * @param {string} labels[i].color - label color
+	 */
 	async updateLabels(labels) {
 		try {
 			await labels.forEach(async (label) => {
@@ -110,6 +163,15 @@ class LabelsManager {
 		}
 	}
 
+	/**
+	 * Updates a single label.
+	 * 
+	 * @param {object} label
+	 * 
+	 * @param {string} labels[i].name - label name
+	 * @param {string} labels[i].description - label description
+	 * @param {string} labels[i].color - label color
+	 */
 	async updateLabel({ name, color, description }) {
 		try {
 			await this._octokit.issues.updateLabel({
