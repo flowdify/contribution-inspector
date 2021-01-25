@@ -1,3 +1,7 @@
+/**
+ * Contribution is a base class for Issue and Pull Request.
+ * Constribution Inspector considers every issue and PR as a contribution.
+ */
 class Contribution {
 	constructor(core, payload, octokit, owner, repo) {
 		this._core = core;
@@ -7,6 +11,11 @@ class Contribution {
 		this._repo = repo;
 	}
 
+	/**
+	 * Posts a comment on issue or PR.
+	 * 
+	 * @param {string} body - comment text body 
+	 */
 	async createContributionComment(body) {
 		try {
 			await this._octokit.issues.createComment({
@@ -21,6 +30,14 @@ class Contribution {
 		}
 	}
 
+	/**
+	 * Add labels to an issue or PR.
+	 * 
+	 * @param {Array} labels 
+	 * 
+	 * @param {Array} labels 
+	 * @param {string} labels[i] - label name to be added
+	 */
 	async addLabels(labels) {
 		try {
 			await this._octokit.issues.addLabels({

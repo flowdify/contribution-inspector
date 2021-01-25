@@ -6196,15 +6196,37 @@ module.exports = IssueTemplateValidator;
 /***/ 2682:
 /***/ ((module) => {
 
+/**
+ * Use this class to create comment body.
+ */
 class Comment {
+	/**
+	 * General header message if atleast 1 error is present.
+	 */
 	static get HEADER_ERROR_MESSAGE() {
 		return '\n:shield: The contribution will remain closed until all the errors mentioned below are resolved:';
 	}
 
+	/**
+	 * Returns a greeting message created from the greeting provided by user and author of the contribution.
+	 * Example: 'Thanks for your contribution! :) @john123'
+	 * 
+	 * @param {string} greetingMessage - greeting message provided by user
+	 * @param {string} authorSlug - author login userid
+	 * @returns
+	 */
 	static createGreetingMessage(greetingMessage, authorSlug) {
 		return `${greetingMessage} @${authorSlug}\n\n`;
 	}
 
+	/**
+	 * Creates and returns error message if title is empty.
+	 * 
+	 * @param {object} titleValidation 
+	 * @param {boolean} titleValidation.isEmpty - check if title is emppty or not
+	 * 
+	 * @returns {string} message
+	 */
 	static isTitleEmpty(titleValidation) {
 		if (titleValidation.isEmpty) {
 			return '\n:x: Title cannot be empty.';
@@ -6213,6 +6235,15 @@ class Comment {
 		return '';
 	}
 
+	/**
+	 * Creates and returns error message if headers are invalid or not present.
+	 * 
+	 * @param {object} headersValidation 
+	 * @param {Array} headersValidation.invalidHeaders
+	 * @param {Array} headersValidation.remainingHeaders
+	 * 
+	 * @returns {string} message
+	 */
 	static createHeadersValidationMessage(headersValidation) {
 		let headersValidationMessage = '';
 
@@ -6237,6 +6268,10 @@ module.exports = Comment;
 /***/ 375:
 /***/ ((module) => {
 
+/**
+ * Contribution is a base class for Issue and Pull Request.
+ * Constribution Inspector considers every issue and PR as a contribution.
+ */
 class Contribution {
 	constructor(core, payload, octokit, owner, repo) {
 		this._core = core;
@@ -6246,6 +6281,11 @@ class Contribution {
 		this._repo = repo;
 	}
 
+	/**
+	 * Posts a comment on issue or PR.
+	 * 
+	 * @param {string} body - comment text body 
+	 */
 	async createContributionComment(body) {
 		try {
 			await this._octokit.issues.createComment({
@@ -6260,6 +6300,14 @@ class Contribution {
 		}
 	}
 
+	/**
+	 * Add labels to an issue or PR.
+	 * 
+	 * @param {Array} labels 
+	 * 
+	 * @param {Array} labels 
+	 * @param {string} labels[i] - label name to be added
+	 */
 	async addLabels(labels) {
 		try {
 			await this._octokit.issues.addLabels({
@@ -6282,6 +6330,11 @@ module.exports = Contribution;
 /***/ 8799:
 /***/ ((module) => {
 
+/**
+ * Use this class to manage, everything related to labels - creation, updation.
+ * 
+ * NOTE: addLabels() function is present in the contribution class.
+ */
 class LabelsManager {
 	constructor(core, payload, octokit, owner, repo, labels) {
 		this._core = core;
@@ -6296,6 +6349,17 @@ class LabelsManager {
 		return this._labels;
 	}
 
+	/**
+	 * Fetches and returns all labels from a repo.
+	 * Also filters the labels to have only name, description and color properties.
+	 * 
+	 * @returns {Array} allLabels - a list of all labels in a repo
+	 * @returns {object} allLabels[i] - a label
+	 * 
+	 * @param {string} allLabels[i].name - label name
+	 * @param {string} allLabels[i].description - label description
+	 * @param {string} allLabels[i].color - label color
+	 */
 	async getAllFilteredLabels() {
 		try {
 			const response = await this._octokit.issues.listLabelsForRepo({
@@ -6320,10 +6384,18 @@ class LabelsManager {
 		}
 	}
 
+	/**
+	 * Creates labels if they are already not created.
+	 * Updates labels if they are chnaged.
+	 */
 	async createOrUpdateLabels() {
 		try {
 			const allCreatedLabels = await this.getAllFilteredLabels();
 
+			/**
+			 * For every label check if it exists or not. If not create it.
+			 * If it exists, check if it has the valid description and color properties.
+			 */
 			for (let i = 0; i < this.LABELS.length; i++) {
 				let isLabelAlreadyCreated = false;
 
@@ -6357,6 +6429,16 @@ class LabelsManager {
 		}
 	}
 
+	/**
+	 * Creates labels.
+	 * 
+	 * @param {Array} labels - list of labels to be created.
+	 * @param {object} labels[i] - label
+	 * 
+	 * @param {string} labels[i].name - label name
+	 * @param {string} labels[i].description - label description
+	 * @param {string} labels[i].color - label color
+	 */
 	async createLabels(labels) {
 		try {
 			await labels.forEach(async (label) => {
@@ -6368,6 +6450,15 @@ class LabelsManager {
 		}
 	}
 
+	/**
+	 * Creates a single label.
+	 * 
+	 * @param {object} label
+	 * 
+	 * @param {string} labels[i].name - label name
+	 * @param {string} labels[i].description - label description
+	 * @param {string} labels[i].color - label color
+	 */
 	async createLabel({ name, color, description }) {
 		try {
 			await this._octokit.issues.createLabel({
@@ -6383,6 +6474,16 @@ class LabelsManager {
 		}
 	}
 
+	/**
+	 * Updates labels.
+	 * 
+	 * @param {Array} labels - list of labels to be created.
+	 * @param {object} labels[i] - label
+	 * 
+	 * @param {string} labels[i].name - label name
+	 * @param {string} labels[i].description - label description
+	 * @param {string} labels[i].color - label color
+	 */
 	async updateLabels(labels) {
 		try {
 			await labels.forEach(async (label) => {
@@ -6394,6 +6495,15 @@ class LabelsManager {
 		}
 	}
 
+	/**
+	 * Updates a single label.
+	 * 
+	 * @param {object} label
+	 * 
+	 * @param {string} labels[i].name - label name
+	 * @param {string} labels[i].description - label description
+	 * @param {string} labels[i].color - label color
+	 */
 	async updateLabel({ name, color, description }) {
 		try {
 			await this._octokit.issues.updateLabel({
@@ -6419,6 +6529,10 @@ module.exports = LabelsManager;
 
 const fetch = __nccwpck_require__(467);
 
+/**
+ * Fetches the templates and validates it first.
+ * Then validates the contribution body text against the template.
+ */
 class TemplateValidator {
 	constructor(owner, repo, octokit, core, templatePath, contributionTitle, contributionBody) {
 		this._owner = owner;
@@ -6431,6 +6545,11 @@ class TemplateValidator {
 		this._body = contributionBody;
 	}
 
+	/**
+	 * Fetches and returns the template using provided template path.
+	 * 
+	 * @returns {string} template - template body text.
+	 */
 	async getTemplate() {
 		try {
 			const response = await this._octokit.repos.getContent({
@@ -6459,6 +6578,15 @@ class TemplateValidator {
 		return (this._body.length == 0);
 	}
 
+	/**
+	 * Returns all the headers from the given text.
+	 * Example: ### Describe the bug:
+	 * 
+	 * @param {string} text 
+	 * 
+	 * @returns {Array} headers - a list of all headers
+	 * @returns {string} headers[i] - a single header
+	 */
 	getHeaders(text) {
 		try {
 			const lines = text.split(/\r?\n/);
@@ -6481,6 +6609,17 @@ class TemplateValidator {
 		}
 	}
 
+	/**
+	 * Validates headers against the template headers.
+	 * 
+	 * 
+	 * @param {Array} templateHeaders - headers fetched from template
+	 * @param {Array} contributionHeaders - headers fetched form contribution.
+	 * 
+	 * @returns {object} headersValidation - An object representing the validation.
+	 * @returns {Array} headersValidation.invalidHeaders - list of all headers which are not originally preent inside the template.
+	 * @returns {Array} headersValidation.remainingHeaders - list of all the headers which are there in the template but not in the contribution.
+	 */
 	validateHeaders(templateHeaders, contributionHeaders) {
 		let invalidHeaders = [];
 		let remainingHeaders = [...templateHeaders];
