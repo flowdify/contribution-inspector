@@ -1,0 +1,17 @@
+name: Test
+
+on: 
+  issues:
+    types: [opened, edited, reopened]
+  pull_request:
+    types: [opened, edited, reopened]
+
+jobs:
+  contribution_inspector:
+    runs-on: ubuntu-latest
+    name: Contribution Inspector
+    steps:
+    - name: All Checks
+      uses: flowdify/contribution-inspector@main
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
