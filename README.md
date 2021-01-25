@@ -54,6 +54,7 @@ Read the documentation carefully before making changes in configuration YAML fil
 |------|----------|-------------|---------|
 | token | string | GitHub secret access token. | ${{ secrets.GITHUB_TOKEN }} |
 | issue--greeting-message | string | Greeting message for issue authors. | 'Thanks you!' |
+| pull-request--greeting-message | string | Greeting message for issue authors. | 'Thanks you!' |
 | pull-request--size-small | integer | Lines of code threshold for a PR with small change. | 50 |
 | pull-request--medium-small | integer | Lines of code threshold for a PR with medium change. | 200 |
 | pull-request--large-small | integer | Lines of code threshold for a PR with large change. | 400 |
