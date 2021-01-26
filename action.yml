@@ -3,7 +3,7 @@ author: 'ranemihir/Flowdify'
 description: 'A GitHub Action to validate submitted issues & PRs.'
 branding:
   icon: 'shield'  
-  color: 'grey-dark'
+  color: 'gray-dark'
 
 inputs:
   token: 
