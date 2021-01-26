@@ -49,8 +49,10 @@ class PullRequestTemplateValidator extends TemplateValidator {
 	isIssueRefPresent() {
 		const issueRefRegex = new RegExp(/#[0-9]+[\n\r\s]+/gm);
 
+		console.log('body =>', this._body);
 		console.log('regex test =>', issueRefRegex.test(this._body));
 		console.log('regex test =>', this._body.match(/#[0-9]+[\n\r\s]+/gm));
+		console.log('regex test =>', this._body.match(/#[0-9]+/gm));
 
 
 		return issueRefRegex.test(this._body);
