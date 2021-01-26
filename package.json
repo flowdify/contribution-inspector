@@ -1,7 +1,7 @@
 {
   "name": "contribution-inspector",
   "version": "1.0.0",
-  "description": "A GitHub Action to monitor submitted issues & PRs.",
+  "description": "A GitHub Action to validate submitted issues & PRs.",
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon",
