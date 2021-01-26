@@ -6666,7 +6666,7 @@ class PullRequestComment extends Comment {
 	}
 
 	static validateIssueRef(isIssueRefPresent) {
-		if (isIssueRefPresent) {
+		if (!isIssueRefPresent) {
 			return '\n:x: Atleast one Issue Reference must be present.';
 		}
 
