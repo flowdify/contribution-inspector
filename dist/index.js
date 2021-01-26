@@ -6862,7 +6862,9 @@ class PullRequestTemplateValidator extends TemplateValidator {
 	}
 
 	isIssueRefPresent() {
-		return this._body.match(/#[0-9]+ /gm) != null;
+		const issueRefRegex = new RegExp(/#[0-9]+ /gm);
+
+		return issueRefRegex.test(this._body);
 	}
 }
 
