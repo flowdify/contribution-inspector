@@ -92,8 +92,9 @@ jobs:
 
 ## Future Plans
 
+- Adding functionality for Check List validation.
 - Adding a functionality of **One Commit per PR** for PRs with small change.
-- Validate the actual body of the submitted issue and PR to check if it is not some gibberish.
-- Provide more customization for template paths and number of templates.
+- Validating the actual body of the submitted issue and PR to check if it is not some gibberish.
+- Providing more customization for template paths and number of templates.
 
 #### More Updates will be added soon...
