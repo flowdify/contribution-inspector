@@ -1,6 +1,9 @@
 name: 'Contribution Inspector'
 author: 'ranemihir/Flowdify'
-description: 'A GitHub Action to monitor submitted issues & PRs.'
+description: 'A GitHub Action to validate submitted issues & PRs.'
+branding:
+  icon: 'shield'  
+  color: 'grey-dark'
 
 inputs:
   token: 
