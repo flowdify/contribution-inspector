@@ -6773,6 +6773,8 @@ class PullRequest extends Contribution {
 			const labelsManager = new LabelsManager(this._core, this._payload, this._octokit, this._owner, this._repo, this.LABELS);
 			await labelsManager.createOrUpdateLabels();
 
+			await this.addRelevantSizeLabel();
+
 			const pullRequestTemplateValidator = new PullRequestTemplateValidator(
 				this._owner,
 				this._repo,
