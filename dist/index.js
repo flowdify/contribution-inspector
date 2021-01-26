@@ -6766,8 +6766,6 @@ class PullRequest extends Contribution {
 
 			await this.addRelevantSizeLabel();
 
-			console.log('payload =>', this._payload);
-
 			const pullRequestTemplateValidator = new PullRequestTemplateValidator(
 				this._owner,
 				this._repo,
