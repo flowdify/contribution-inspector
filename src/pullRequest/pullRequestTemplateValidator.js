@@ -14,15 +14,12 @@ class PullRequestTemplateValidator extends TemplateValidator {
 
 			this._headersValidation = this.validateHeaders(this._templateHeaders, this._contributionHeaders);
 
-			this._isIssueRefPresent = this.isIssueRefPresent();
-
 			return {
 				isValid: this.isValid(),
 				titleValidation: {
 					isEmpty: this.isTitleEmpty()
 				},
-				headersValidation: this._headersValidation,
-				isIssueRefPresent: this._isIssueRefPresent
+				headersValidation: this._headersValidation
 			};
 		} catch (err) {
 			console.error(err);
@@ -39,23 +36,7 @@ class PullRequestTemplateValidator extends TemplateValidator {
 			return false;
 		}
 
-		if (!this._isIssueRefPresent) {
-			return false;
-		}
-
 		return true;
-	}
-
-	isIssueRefPresent() {
-		const issueRefRegex = new RegExp(/#[0-9]+[\n\r\s]+/gm);
-
-		console.log('body =>', this._body);
-		console.log('regex test =>', issueRefRegex.test(this._body));
-		console.log('regex test =>', this._body.match(/#[0-9]+[\n\r\s]+/gm));
-		console.log('regex test =>', this._body.match(/#[0-9]+/gm));
-
-
-		return issueRefRegex.test(this._body);
 	}
 }
 

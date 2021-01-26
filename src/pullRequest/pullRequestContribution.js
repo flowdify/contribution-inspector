@@ -104,15 +104,14 @@ class PullRequest extends Contribution {
 				this._payload.body
 			);
 
-			const { isValid, titleValidation, headersValidation, isIssueRefPresent } = await pullRequestTemplateValidator.validate();
+			const { isValid, titleValidation, headersValidation } = await pullRequestTemplateValidator.validate();
 
 			let responseCommentBody = PullRequestComment.createBody(
 				isValid,
 				this.INPUTS.greetingMessage,
 				this._payload.user.login,
 				titleValidation,
-				headersValidation,
-				isIssueRefPresent
+				headersValidation
 			);
 
 			await this.createContributionComment(responseCommentBody);

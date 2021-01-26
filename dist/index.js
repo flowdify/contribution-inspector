@@ -6650,7 +6650,7 @@ module.exports = TemplateValidator;
 const Comment = __nccwpck_require__(2682);
 
 class PullRequestComment extends Comment {
-	static createBody(isValid, greetingMessage, authorSlug, titleValidation, headersValidation, isIssueRefPresent) {
+	static createBody(isValid, greetingMessage, authorSlug, titleValidation, headersValidation) {
 		let commentBody = '';
 
 		commentBody += this.createGreetingMessage(greetingMessage, authorSlug);
@@ -6659,18 +6659,9 @@ class PullRequestComment extends Comment {
 			commentBody += this.HEADER_ERROR_MESSAGE;
 			commentBody += this.isTitleEmpty(titleValidation);
 			commentBody += this.createHeadersValidationMessage(headersValidation);
-			commentBody += this.validateIssueRef(isIssueRefPresent);
 		}
 
 		return commentBody;
-	}
-
-	static validateIssueRef(isIssueRefPresent) {
-		if (!isIssueRefPresent) {
-			return '\n:x: Atleast one Issue Reference must be present.';
-		}
-
-		return '';
 	}
 }
 
@@ -6787,15 +6778,14 @@ class PullRequest extends Contribution {
 				this._payload.body
 			);
 
-			const { isValid, titleValidation, headersValidation, isIssueRefPresent } = await pullRequestTemplateValidator.validate();
+			const { isValid, titleValidation, headersValidation } = await pullRequestTemplateValidator.validate();
 
 			let responseCommentBody = PullRequestComment.createBody(
 				isValid,
 				this.INPUTS.greetingMessage,
 				this._payload.user.login,
 				titleValidation,
-				headersValidation,
-				isIssueRefPresent
+				headersValidation
 			);
 
 			await this.createContributionComment(responseCommentBody);
@@ -6833,15 +6823,12 @@ class PullRequestTemplateValidator extends TemplateValidator {
 
 			this._headersValidation = this.validateHeaders(this._templateHeaders, this._contributionHeaders);
 
-			this._isIssueRefPresent = this.isIssueRefPresent();
-
 			return {
 				isValid: this.isValid(),
 				titleValidation: {
 					isEmpty: this.isTitleEmpty()
 				},
-				headersValidation: this._headersValidation,
-				isIssueRefPresent: this._isIssueRefPresent
+				headersValidation: this._headersValidation
 			};
 		} catch (err) {
 			console.error(err);
@@ -6858,23 +6845,7 @@ class PullRequestTemplateValidator extends TemplateValidator {
 			return false;
 		}
 
-		if (!this._isIssueRefPresent) {
-			return false;
-		}
-
 		return true;
-	}
-
-	isIssueRefPresent() {
-		const issueRefRegex = new RegExp(/#[0-9]+[\n\r\s]+/gm);
-
-		console.log('body =>', this._body);
-		console.log('regex test =>', issueRefRegex.test(this._body));
-		console.log('regex test =>', this._body.match(/#[0-9]+[\n\r\s]+/gm));
-		console.log('regex test =>', this._body.match(/#[0-9]+/gm));
-
-
-		return issueRefRegex.test(this._body);
 	}
 }
 
